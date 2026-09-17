@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="Plan, order, and render storyboards locally with Higgsfield.">
+    <title>Storyboard Relay</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="control-rail" aria-label="Storyboard controls">
+        <h1>Storyboard Relay</h1>
+
+        <ol class="steps" aria-label="Pipeline progress">
+          <li class="step is-active" data-step="brief"><span>1</span><strong>Brief</strong></li>
+          <li class="step" data-step="board"><span>2</span><strong>Order</strong></li>
+          <li class="step" data-step="render"><span>3</span><strong>Render</strong></li>
+        </ol>
+
+        <form id="brief-form" class="form-stack">
+          <label>
+            <span>Concept</span>
+            <textarea id="concept" name="concept" rows="6" minlength="10" maxlength="4000" required>A solitary observer studies a luminous planet through a telescope. The planet reveals a smaller version of the same observer looking back, creating a recursive visual loop.</textarea>
+          </label>
+
+          <label>
+            <span>Visual language</span>
+            <textarea id="style" name="style" rows="3" maxlength="1000">Cinematic night photography, precise telescope geometry, deep cobalt shadows, restrained amber highlights, subtle film grain</textarea>
+          </label>
+
+          <fieldset class="step-picker" aria-describedby="step-picker-count">
+            <legend>Storyboard steps</legend>
+            <div id="step-picker" class="step-picker-grid" role="group" aria-label="Choose which steps to include"></div>
+            <p id="step-picker-count" class="field-note"><span id="step-picker-summary">0 steps selected</span></p>
+          </fieldset>
+
+          <label>
+            <span>Frame ratio</span>
+            <select id="aspect-ratio" name="aspectRatio">
+              <option value="16:9" selected>16:9</option>
+              <option value="9:16">9:16</option>
+              <option value="1:1">1:1</option>
+              <option value="4:3">4:3</option>
+              <option value="3:4">3:4</option>
+            </select>
+          </label>
+
+          <button class="primary-action" id="create-storyboard" type="submit">
+            <span>Generate storyboard</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <section class="system-card" aria-labelledby="system-title">
+          <div class="system-heading">
+            <h2 id="system-title">Connections</h2>
+            <button class="text-button" id="check-higgsfield" type="button">Check</button>
+          </div>
+          <div class="status-row"><span class="status-dot" id="storyboard-dot"></span><span>Storyboard model</span><strong id="storyboard-status">Nano Banana 2</strong></div>
+          <div class="status-row"><span class="status-dot" id="higgsfield-dot"></span><span>Higgsfield</span><strong id="higgsfield-status">Checking</strong></div>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <header class="workspace-heading">
+          <h2 id="project-title">Build a visual sequence</h2>
+          <div class="workspace-actions">
+            <button class="secondary-action" id="new-board" type="button" hidden>New board</button>
+            <button class="secondary-action" id="open-render" type="button" disabled>Render settings</button>
+          </div>
+        </header>
+
+        <section id="empty-state" class="empty-state">
+          <h2>Generate the pieces. Keep control of the cut.</h2>
+          <p>Start with a concept. Local templates shape a coherent storyboard; the board becomes an editable timeline before final video credits are spent.</p>
+        </section>
+
+        <section id="busy-state" class="busy-state" hidden aria-live="polite">
+          <h2 id="busy-title">Directing four visual beats…</h2>
+          <div class="progress-track"><span></span></div>
+        </section>
+
+        <section id="board-view" class="board-view" hidden>
+          <div class="board-intro">
+            <h3>The storyboard</h3>
+            <p id="continuity-summary"></p>
+          </div>
+          <div id="frame-board" class="frame-board" role="list" aria-label="Ordered storyboard frames"></div>
+          <div class="order-readout">
+            <span>Final order</span>
+            <ol id="order-list"></ol>
+          </div>
+        </section>
+
+        <section id="render-panel" class="render-panel" hidden>
+          <div class="render-copy">
+            <h3>Render the sequence</h3>
+            <p>The first and last cards become boundary frames. Every card between them is sent to the model in this exact order.</p>
+          </div>
+          <div class="render-form">
+            <label>
+              <span>Motion direction</span>
+              <textarea id="motion-prompt" rows="5" maxlength="4000"></textarea>
+            </label>
+            <div class="field-grid three-up">
+              <label>
+                <span>Model</span>
+                <select id="video-model">
+                  <option value="seedance_2_0">Seedance 2.0</option>
+                </select>
+              </label>
+              <label>
+                <span>Duration</span>
+                <select id="duration"></select>
+              </label>
+              <label>
+                <span>Resolution</span>
+                <select id="resolution"></select>
+              </label>
+            </div>
+            <label class="check-row">
+              <input id="generate-audio" type="checkbox" checked>
+              <span>Generate native audio when the model supports it</span>
+            </label>
+            <button class="primary-action" id="preflight" type="button">
+              <span>Review cost</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </section>
+
+        <section id="run-panel" class="run-panel" hidden aria-live="polite">
+          <div class="run-status">
+            <span class="status-dot is-live"></span>
+            <h3 id="run-title">Queued</h3>
+          </div>
+          <p id="run-message">The ordered board has been accepted.</p>
+          <div id="result-media" class="result-media"></div>
+        </section>
+
+        <p id="global-error" class="error-banner" hidden role="alert"></p>
+      </section>
+    </main>
+
+    <dialog id="cost-dialog" class="app-dialog">
+      <form method="dialog">
+        <h2>Ready to render this order?</h2>
+        <dl>
+          <div><dt>Model</dt><dd id="confirm-model"></dd></div>
+          <div><dt>Length</dt><dd id="confirm-duration"></dd></div>
+          <div><dt>Frames</dt><dd id="confirm-frames"></dd></div>
+          <div><dt>Estimated cost</dt><dd id="confirm-cost"></dd></div>
+        </dl>
+        <p class="dialog-note">This is the last checkpoint before Higgsfield credits are used.</p>
+        <div class="dialog-actions">
+          <button class="secondary-action" value="cancel">Cancel</button>
+          <button class="primary-action compact" id="confirm-generate" value="default" type="button">Generate video →</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="edit-dialog" class="app-dialog">
+      <form method="dialog" class="edit-form">
+        <h2 id="edit-title">Edit shot</h2>
+        <label>
+          <span>Title</span>
+          <input id="edit-shot-title" type="text" maxlength="100">
+        </label>
+        <label>
+          <span>Beat</span>
+          <textarea id="edit-beat" rows="3" maxlength="500"></textarea>
+        </label>
+        <label>
+          <span>Camera</span>
+          <input id="edit-camera" type="text" maxlength="400">
+        </label>
+        <label>
+          <span>Transition</span>
+          <input id="edit-transition" type="text" maxlength="300">
+        </label>
+        <label>
+          <span>Image prompt</span>
+          <textarea id="edit-image-prompt" rows="6" maxlength="2000"></textarea>
+        </label>
+        <label class="check-row">
+          <input id="edit-regenerate" type="checkbox">
+          <span>Regenerate the image after saving</span>
+        </label>
+        <div class="dialog-actions">
+          <button class="secondary-action" value="cancel">Cancel</button>
+          <button class="primary-action compact" id="confirm-edit" value="default" type="button">Save →</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

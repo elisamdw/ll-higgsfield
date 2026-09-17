@@ -1,0 +1,5 @@
+.env
+.DS_Store
+node_modules/
+storyboard-pipeline-v1/data/*
+!storyboard-pipeline-v1/data/.gitkeep
