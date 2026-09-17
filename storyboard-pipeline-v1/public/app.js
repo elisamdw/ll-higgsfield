@@ -586,6 +586,57 @@ async function confirmFrameEdit() {
   }
 }
 
+const RAIL_STORAGE_KEY = 'storyboard-relay:rail-width'
+const RAIL_MIN = 240
+const RAIL_MAX = 560
+
+function applyRailWidth(width) {
+  const clamped = Math.max(RAIL_MIN, Math.min(RAIL_MAX, Math.round(width)))
+  document.documentElement.style.setProperty('--rail-width', `${clamped}px`)
+  return clamped
+}
+
+function initRailResizer() {
+  const resizer = document.querySelector('.rail-resizer')
+  if (!resizer) return
+  const stored = Number(window.localStorage.getItem(RAIL_STORAGE_KEY))
+  if (Number.isFinite(stored) && stored >= RAIL_MIN && stored <= RAIL_MAX) applyRailWidth(stored)
+
+  let dragging = false
+  const start = (event) => {
+    dragging = true
+    resizer.classList.add('is-dragging')
+    document.body.classList.add('is-resizing')
+    event.preventDefault()
+  }
+  const move = (event) => {
+    if (!dragging) return
+    const width = applyRailWidth(event.clientX)
+    window.localStorage.setItem(RAIL_STORAGE_KEY, String(width))
+  }
+  const end = () => {
+    if (!dragging) return
+    dragging = false
+    resizer.classList.remove('is-dragging')
+    document.body.classList.remove('is-resizing')
+  }
+  resizer.addEventListener('pointerdown', start)
+  window.addEventListener('pointermove', move)
+  window.addEventListener('pointerup', end)
+  window.addEventListener('pointercancel', end)
+
+  resizer.addEventListener('keydown', (event) => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return
+    event.preventDefault()
+    const current = Number(getComputedStyle(document.documentElement).getPropertyValue('--rail-width').replace('px', '')) || 340
+    const delta = event.shiftKey ? 32 : 12
+    const width = applyRailWidth(current + (event.key === 'ArrowLeft' ? -delta : delta))
+    window.localStorage.setItem(RAIL_STORAGE_KEY, String(width))
+  })
+}
+
+initRailResizer()
+
 elements.form.addEventListener('submit', createStoryboard)
 elements.checkHiggsfield.addEventListener('click', checkHiggsfieldConnection)
 elements.newBoard.addEventListener('click', resetWorkspace)
