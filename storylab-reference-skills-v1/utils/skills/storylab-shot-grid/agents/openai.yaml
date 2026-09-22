@@ -1,0 +1,6 @@
+interface:
+  display_name: "StoryLab Shot Grid"
+  short_description: "Build continuity-safe cinematic shot grids"
+  default_prompt: "Use $storylab-shot-grid to create a reproducible shot grid."
+policy:
+  allow_implicit_invocation: true

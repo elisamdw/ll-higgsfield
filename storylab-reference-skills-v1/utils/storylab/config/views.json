@@ -1,0 +1,41 @@
+{
+  "character": {
+    "aspect_ratio": "2:3",
+    "sheet_columns": 3,
+    "views": [
+      {"id": "front-full", "label": "Front / full body", "camera": "Eye-level, straight-on, 85 mm-equivalent lens, minimal perspective distortion", "direction": "Show the complete character from head to toe in a neutral relaxed stance."},
+      {"id": "three-quarter-left", "label": "Left three-quarter", "camera": "Eye-level, left three-quarter view, 85 mm-equivalent lens", "direction": "Rotate the same character about 45 degrees; preserve face, proportions, hair, clothing, and accessories."},
+      {"id": "profile-left", "label": "Left profile", "camera": "Eye-level, exact left profile, 85 mm-equivalent lens", "direction": "Show a clean side silhouette with the full body visible."},
+      {"id": "back-full", "label": "Back / full body", "camera": "Eye-level, straight rear view, 85 mm-equivalent lens", "direction": "Show the complete rear construction of hair, clothing, and accessories."},
+      {"id": "portrait-neutral", "label": "Neutral portrait", "camera": "Eye-level head-and-shoulders portrait, 105 mm-equivalent lens", "direction": "Use a neutral expression and reveal identity-defining facial details clearly."},
+      {"id": "portrait-warm", "label": "Warm expression", "camera": "Eye-level head-and-shoulders portrait, 105 mm-equivalent lens", "direction": "Use a subtle genuine smile without changing facial structure, styling, or age."}
+    ]
+  },
+  "prop": {
+    "aspect_ratio": "1:1",
+    "sheet_columns": 3,
+    "views": [
+      {"id": "front", "label": "Front", "camera": "Straight-on front product view, long lens, minimal perspective distortion", "direction": "Show the complete object centered and unobstructed."},
+      {"id": "three-quarter-left", "label": "Left three-quarter", "camera": "Elevated left three-quarter product view, long lens", "direction": "Reveal front, side, and depth while preserving exact construction."},
+      {"id": "side-left", "label": "Left side", "camera": "Exact left orthographic-like side view", "direction": "Show the full side silhouette and all visible fittings."},
+      {"id": "back", "label": "Back", "camera": "Straight-on rear product view, long lens", "direction": "Show the complete rear construction and markings."},
+      {"id": "top", "label": "Top", "camera": "Exact overhead product view", "direction": "Show the complete top plane and footprint."},
+      {"id": "detail", "label": "Construction detail", "camera": "Macro detail, 100 mm-equivalent macro lens", "direction": "Show the most identity-defining material junction, mechanism, label, or wear pattern."}
+    ]
+  },
+  "shot-grid": {
+    "aspect_ratio": "16:9",
+    "sheet_columns": 3,
+    "views": [
+      {"id": "establishing", "label": "Establishing", "camera": "24 mm wide lens, eye level", "direction": "Establish the full location and spatial relationships around the exact source scene."},
+      {"id": "wide", "label": "Wide", "camera": "28 mm lens, eye level", "direction": "Show the full subject and enough environment to preserve blocking."},
+      {"id": "full", "label": "Full", "camera": "40 mm lens, eye level", "direction": "Frame the complete principal subject from head to toe or show the complete object."},
+      {"id": "medium", "label": "Medium", "camera": "50 mm lens, eye level", "direction": "Frame the principal subject at medium distance while preserving eyelines and screen direction."},
+      {"id": "medium-close-up", "label": "Medium close-up", "camera": "65 mm lens, eye level", "direction": "Prioritize the principal subject from chest up without altering identity or performance."},
+      {"id": "close-up", "label": "Close-up", "camera": "85 mm lens, eye level", "direction": "Frame the principal face or story-critical detail closely while preserving exact continuity."},
+      {"id": "over-shoulder", "label": "Over shoulder", "camera": "50 mm lens, shoulder-height reverse angle", "direction": "Create a motivated over-the-shoulder composition; preserve geography, eyelines, and character sides."},
+      {"id": "high-angle", "label": "High angle", "camera": "35 mm lens, camera above the subject looking down", "direction": "Change only camera elevation and framing; preserve the scene layout."},
+      {"id": "low-angle", "label": "Low angle", "camera": "35 mm lens, camera below the subject looking up", "direction": "Change only camera elevation and framing; preserve the scene layout."}
+    ]
+  }
+}

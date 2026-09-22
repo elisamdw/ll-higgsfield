@@ -1,0 +1,6 @@
+interface:
+  display_name: "StoryLab Character Pack"
+  short_description: "Build reproducible character reference packs"
+  default_prompt: "Use $storylab-character-pack to create a reproducible character reference pack."
+policy:
+  allow_implicit_invocation: true

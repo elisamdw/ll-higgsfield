@@ -1,0 +1,6 @@
+interface:
+  display_name: "StoryLab Prop Pack"
+  short_description: "Build reproducible prop reference packs"
+  default_prompt: "Use $storylab-prop-pack to create a reproducible prop reference pack."
+policy:
+  allow_implicit_invocation: true
