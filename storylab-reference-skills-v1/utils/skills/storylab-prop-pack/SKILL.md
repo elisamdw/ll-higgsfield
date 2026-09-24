@@ -15,16 +15,16 @@ Require a stable asset id and explicit uint32 seed. Ask for known dimensions, ma
 
 1. Preview planning:
 
-   `node utils/storylab-pack.mjs plan prop --id ID --seed N --brief "BRIEF" --ref FILE --dry-run`
+   `node utils/storylab.mjs plan prop --id ID --seed N --brief "BRIEF" --ref FILE --dry-run`
 
 2. Remove `--dry-run` when generation is requested. Inspect the resulting `plan.json`; create a new pack rather than editing a frozen plan.
 3. Preview, then run rendering:
 
-   `node utils/storylab-pack.mjs render output/storylab/prop-ID/plan.json --dry-run`
+   `node utils/storylab.mjs render output/storylab/prop-ID/plan.json --dry-run`
 
 4. Optionally audit all six outputs:
 
-   `node utils/storylab-pack.mjs review output/storylab/prop-ID/plan.json --dry-run`
+   `node utils/storylab.mjs review output/storylab/prop-ID/plan.json --dry-run`
 
 Remove `--dry-run` only for the paid phase the user requested.
 

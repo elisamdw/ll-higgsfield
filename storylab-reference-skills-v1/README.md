@@ -1,12 +1,14 @@
 # StoryLab reference skills v1
 
-A self-contained OpenRouter + fal prototype for reusable visual-reference workflows inspired by the production behavior of character sheets, prop turnarounds, camera-angle exploration, and continuity review.
+A self-contained OpenRouter + fal prototype for reusable visual-reference workflows inspired by the production behavior of character sheets, prop turnarounds, camera-angle exploration, immutable asset libraries, connected storyboards, and continuity review.
 
-It includes three Codex skills:
+It includes five Codex skills:
 
 - `storylab-character-pack`: six character views with identity and wardrobe locks.
 - `storylab-prop-pack`: six object views with construction, material, color, and marking locks.
 - `storylab-shot-grid`: nine camera framings derived independently from one source scene.
+- `storylab-element-library`: immutable, content-addressed character, prop, and location references.
+- `storylab-connected-sequence`: 2–8 ordered storyboard stills from 1–4 frozen Elements.
 
 This project recreates workflow semantics, not proprietary Higgsfield models or implementation details. It does not train identity models and does not promise pixel-identical results from hosted endpoints.
 
@@ -18,7 +20,7 @@ This project recreates workflow semantics, not proprietary Higgsfield models or 
 
 Copy `.env.example` to `.env` and add the keys. There are no package dependencies to install.
 
-## Workflow
+## Reference-pack workflow
 
 Every pack has three explicit phases:
 
@@ -29,7 +31,7 @@ Every pack has three explicit phases:
 Preview any paid phase with `--dry-run`.
 
 ```bash
-node utils/storylab-pack.mjs plan character \
+node utils/storylab.mjs plan character \
   --id noa \
   --seed 41021 \
   --brief "A bicycle courier in a cobalt rain shell" \
@@ -40,36 +42,90 @@ node utils/storylab-pack.mjs plan character \
 Remove `--dry-run` to create the frozen pack, inspect `plan.json`, and then render:
 
 ```bash
-node utils/storylab-pack.mjs render output/storylab/character-noa/plan.json --dry-run
-node utils/storylab-pack.mjs render output/storylab/character-noa/plan.json
-node utils/storylab-pack.mjs review output/storylab/character-noa/plan.json --dry-run
+node utils/storylab.mjs render output/storylab/character-noa/plan.json --dry-run
+node utils/storylab.mjs render output/storylab/character-noa/plan.json
+node utils/storylab.mjs review output/storylab/character-noa/plan.json --dry-run
 ```
 
 Use `prop` instead of `character` for an object pack. A shot grid requires exactly one source image:
 
 ```bash
-node utils/storylab-pack.mjs plan shot-grid \
+node utils/storylab.mjs plan shot-grid \
   --id alley-confrontation \
   --seed 9817 \
   --brief "Preserve eyelines, screen direction, rain, and neon lighting" \
   --ref /path/to/source-frame.png
 ```
 
+`utils/storylab-pack.mjs` remains as a backwards-compatible entry point.
+
+## Element Library
+
+Import a completed character or prop pack locally, without another provider call:
+
+```bash
+node utils/storylab.mjs element import output/storylab/character-noa/plan.json
+```
+
+Register a location—or existing character/prop references—with a strict OpenRouter continuity lock:
+
+```bash
+node utils/storylab.mjs element create \
+  --type location \
+  --id renaissance-lab \
+  --brief "Vaulted laboratory with a central walnut workbench and north window" \
+  --ref /path/to/lab.png
+```
+
+The returned `id@sha256` is the immutable address. Repeating an identical import or registration is idempotent. An unversioned id works only while it has exactly one version.
+
+```bash
+node utils/storylab.mjs element list
+node utils/storylab.mjs element inspect renaissance-lab@HASH
+node utils/storylab.mjs element verify renaissance-lab@HASH
+```
+
+## Connected Sequence
+
+Plan a 2–8-frame sequence from 1–4 frozen Elements:
+
+```bash
+node utils/storylab.mjs sequence plan \
+  --id laboratory-discovery \
+  --seed 8128 \
+  --frames 6 \
+  --story "The scientist enters the laboratory and discovers a brass instrument" \
+  --element scientist@HASH \
+  --element renaissance-lab@HASH \
+  --dry-run
+```
+
+Remove `--dry-run` to freeze the OpenRouter plan, inspect it, then render and audit:
+
+```bash
+node utils/storylab.mjs sequence render output/storylab/sequences/laboratory-discovery/plan.json --dry-run
+node utils/storylab.mjs sequence render output/storylab/sequences/laboratory-discovery/plan.json
+node utils/storylab.mjs sequence review output/storylab/sequences/laboratory-discovery/plan.json --dry-run
+```
+
+For exact creator-authored pacing, replace `--frames` and `--story` with `--beats-file beats.json`, containing either a JSON array of strings or `{"beats": [...]}`.
+
 ## Reproducibility
 
-The pack records source hashes, model and endpoint IDs, planner JSON, compiled-prompt hashes, derived per-view seeds, provider requests and responses, fal queue receipts, and output hashes. Contact sheets are composed locally as deterministic SVG rather than generated by a model.
+The workflows record source hashes, immutable Element versions, model and endpoint IDs, planner JSON, compiled-prompt hashes, derived seeds, provider requests and responses, fal queue receipts, and output hashes. Contact sheets and storyboards are composed locally as deterministic SVG rather than generated by a model.
 
-Interrupted fal jobs resume the saved request into a new attempt directory. They are not silently resubmitted. See [`utils/storylab/DETERMINISM.md`](utils/storylab/DETERMINISM.md) for the full contract.
+Interrupted fal jobs resume the saved request into a new attempt directory. They are not silently resubmitted. Connected frames render sequentially with all selected Element masters, the first generated frame, and the immediately previous frame under a fixed eight-image budget. See [`utils/storylab/DETERMINISM.md`](utils/storylab/DETERMINISM.md) for the full contract.
 
 ## Layout
 
 ```text
 storylab-reference-skills-v1/
+  utils/storylab.mjs
   utils/storylab-pack.mjs
   utils/lib/                    shared provider runtime
-  utils/storylab/               planner, renderer, reviewer, configs
-  utils/skills/                 three reusable Codex skills
-  utils/test/storylab.test.mjs
+  utils/storylab/               pack, Element, sequence, QA, and config modules
+  utils/skills/                 five reusable Codex skills
+  utils/test/                   offline mocked-provider tests
 ```
 
 Run the tests with:

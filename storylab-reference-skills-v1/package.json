@@ -2,13 +2,14 @@
   "name": "storylab-reference-skills-v1",
   "version": "0.1.0",
   "private": true,
-  "description": "Deterministic OpenRouter and fal workflows for character packs, prop packs, and shot grids",
+  "description": "Deterministic OpenRouter and fal workflows for reference packs, immutable Elements, and connected sequences",
   "type": "module",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "storylab": "node utils/storylab-pack.mjs",
+    "storylab": "node utils/storylab.mjs",
+    "storylab-pack": "node utils/storylab-pack.mjs",
     "test": "node --test utils/test/*.test.mjs"
   }
 }

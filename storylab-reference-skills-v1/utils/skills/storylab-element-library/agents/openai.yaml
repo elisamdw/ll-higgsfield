@@ -1,0 +1,6 @@
+interface:
+  display_name: "StoryLab Element Library"
+  short_description: "Register reusable visual continuity elements"
+  default_prompt: "Use $storylab-element-library to register and verify a reusable visual element."
+policy:
+  allow_implicit_invocation: true

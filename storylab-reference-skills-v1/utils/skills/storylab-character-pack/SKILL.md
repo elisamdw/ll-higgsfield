@@ -15,17 +15,17 @@ Require a stable asset id and explicit uint32 seed. Accept a written brief, 1–
 
 1. Preview planning without writes or network calls:
 
-   `node utils/storylab-pack.mjs plan character --id ID --seed N --brief "BRIEF" --ref FILE --dry-run`
+   `node utils/storylab.mjs plan character --id ID --seed N --brief "BRIEF" --ref FILE --dry-run`
 
 2. Remove `--dry-run` when generation is requested. This makes one paid OpenRouter call and creates a new immutable pack. Never edit `plan.json` in place; create a new pack when the lock is wrong.
 3. Inspect the frozen plan, then preview rendering:
 
-   `node utils/storylab-pack.mjs render output/storylab/character-ID/plan.json --dry-run`
+   `node utils/storylab.mjs render output/storylab/character-ID/plan.json --dry-run`
 
 4. Render with the same command without `--dry-run`. This makes one fal request per missing view and produces `contact-sheet.svg`. Rerun the command to skip completed views and resume saved queue receipts.
 5. When continuity QA is useful, preview and then run:
 
-   `node utils/storylab-pack.mjs review output/storylab/character-ID/plan.json --dry-run`
+   `node utils/storylab.mjs review output/storylab/character-ID/plan.json --dry-run`
 
 The review is diagnostic. Do not silently regenerate failed views.
 

@@ -1,0 +1,9 @@
+{
+  "contract_version": 1,
+  "min_frames": 2,
+  "max_frames": 8,
+  "max_elements": 4,
+  "max_reference_images": 8,
+  "reserved_anchor_images": 2,
+  "default_aspect_ratio": "16:9"
+}

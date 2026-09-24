@@ -1,0 +1,6 @@
+interface:
+  display_name: "StoryLab Connected Sequence"
+  short_description: "Build continuity-safe storyboard sequences"
+  default_prompt: "Use $storylab-connected-sequence to plan and render a connected storyboard sequence."
+policy:
+  allow_implicit_invocation: true

@@ -15,16 +15,16 @@ Require exactly one PNG/JPEG/WebP source image, a stable asset id, and an explic
 
 1. Preview planning:
 
-   `node utils/storylab-pack.mjs plan shot-grid --id ID --seed N --brief "BRIEF" --ref SOURCE --dry-run`
+   `node utils/storylab.mjs plan shot-grid --id ID --seed N --brief "BRIEF" --ref SOURCE --dry-run`
 
 2. Remove `--dry-run` when generation is requested. Inspect `plan.json`; if geography or continuity locks are wrong, create a new pack.
 3. Preview and then run the nine fal edits:
 
-   `node utils/storylab-pack.mjs render output/storylab/shot-grid-ID/plan.json --dry-run`
+   `node utils/storylab.mjs render output/storylab/shot-grid-ID/plan.json --dry-run`
 
 4. Optionally audit the completed grid:
 
-   `node utils/storylab-pack.mjs review output/storylab/shot-grid-ID/plan.json --dry-run`
+   `node utils/storylab.mjs review output/storylab/shot-grid-ID/plan.json --dry-run`
 
 The local contact sheet is a presentation artifact. Individual view images remain the canonical outputs.
 

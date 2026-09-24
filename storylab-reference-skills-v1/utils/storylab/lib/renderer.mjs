@@ -1,4 +1,4 @@
-import {existsSync, mkdirSync, readdirSync} from 'node:fs';
+import {existsSync, mkdirSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {buildRequest} from '../../lib/providers.mjs';
 import {execute, loadConfig} from '../../lib/runtime.mjs';
@@ -6,9 +6,8 @@ import {
   PROMPT_COMPILER_VERSION, assertWithin, canonicalJson, deriveSeed, hashFile, loadStagedReferences,
   readImage, readJson, sha256, writeJsonExclusive,
 } from './core.mjs';
+import {attemptDirectories, findImage, nextAttempt, resumableReceipt} from './attempts.mjs';
 import {writeContactSheet} from './sheet.mjs';
-
-const IMAGE_PATTERN = /^image-\d+\.(png|jpg|webp)$/;
 
 function stablePlanSpec(plan) {
   const {plan_sha256, created_at, planner_record, ...spec} = plan;
@@ -84,34 +83,6 @@ function renderManifest(plan) {
       prompt_sha256: sha256(compilePrompt(plan, view)),
     })),
   };
-}
-
-function attemptDirectories(viewDir) {
-  if (!existsSync(viewDir)) return [];
-  return readdirSync(viewDir, {withFileTypes: true})
-    .filter(entry => entry.isDirectory() && /^attempt-\d+$/.test(entry.name))
-    .map(entry => join(viewDir, entry.name)).sort();
-}
-
-function findImage(viewDir) {
-  for (const dir of attemptDirectories(viewDir)) {
-    const name = readdirSync(dir).sort().find(file => IMAGE_PATTERN.test(file));
-    if (name) return join(dir, name);
-  }
-  return undefined;
-}
-
-function resumableReceipt(viewDir) {
-  const attempts = attemptDirectories(viewDir).reverse();
-  for (const dir of attempts) {
-    const file = join(dir, 'fal-request.json');
-    if (existsSync(file)) return readJson(file);
-  }
-  return undefined;
-}
-
-function nextAttempt(viewDir) {
-  return join(viewDir, `attempt-${String(attemptDirectories(viewDir).length + 1).padStart(3, '0')}`);
 }
 
 function falReferences(images) {
